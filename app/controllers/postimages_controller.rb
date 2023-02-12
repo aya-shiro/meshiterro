@@ -1,16 +1,17 @@
 class PostimagesController < ApplicationController
   def new
-    @post_image = Postimage.new
+    @postimage = Postimage.new
   end
 
   def create
-    @post_image = Postimage.new(post_image_params)
-    @post_image.user_id = current_user.id
-    @post_image.save
-    redirect_to post_images_path
+    @postimage = Postimage.new(postimage_params)
+    @postimage.user_id = current_user.id
+    @postimage.save
+    redirect_to postimages_path
   end
 
   def index
+    @postimages = Postimage.all
   end
 
   def show
@@ -18,8 +19,8 @@ class PostimagesController < ApplicationController
 
 
   private
-  def post_image_params
-    params.require(:posy_image).permit(:shop_name, :image, :caption)
+  def postimage_params
+    params.require(:postimage).permit(:shop_name, :image, :caption)
   end
 
 end
