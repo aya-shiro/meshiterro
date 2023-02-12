@@ -15,6 +15,7 @@ class PostimagesController < ApplicationController
   end
 
   def show
+    @postimage = Postimage.find(params[:id])
   end
 
 
