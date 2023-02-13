@@ -1,3 +1,13 @@
 <div>
-  
+  <%= image_tag @postimage.get_image %>
+  <p>ショップ名<%= @postimage.shop_name %></p>
+  <p>説明<%= @postimage.caption %></p>
+  <p>投稿ユーザー画像<%= image_tag @postimage.user.get_profile_image(100, 100) %></p>
+  <P>ユーザーネーム<%= @postimage.user.name %></P>
+  <p>投稿日時<%= @postimage.created_at.strftime("%Y/%m/%d") %></p>
+
+  <%= if @postimage.user == current_user %>
+  <!--ここで引数に指定している(@postimage)はshowアクションで定義した@postimage -->
+    <%= link_to "削除", postimage_path(@postimage), method: :delete %>
+  <% end %>
 </div>
