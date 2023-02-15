@@ -6,7 +6,8 @@ root to: 'homes#top'
 get "homes/about", as: "about"
 
 resources :postimages, only: [:new, :create, :index, :show, :destroy] do
-  resources :post_comment, only: [:create]
+  resource :favorites, only: [:create, :destroy]
+  resources :post_comments, only: [:create, :destroy]
 end
 resources :users, only: [:show, :edit, :update]
 

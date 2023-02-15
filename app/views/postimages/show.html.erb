@@ -1,13 +1,57 @@
+<!--投稿画像の詳細情報-->
 <div>
   <%= image_tag @postimage.get_image %>
   <p>ショップ名<%= @postimage.shop_name %></p>
   <p>説明<%= @postimage.caption %></p>
+  <!--.userでUserモデルのカラムnameが使えるようになる-->
   <p>投稿ユーザー画像<%= image_tag @postimage.user.get_profile_image(100, 100) %></p>
   <P>ユーザーネーム<%= @postimage.user.name %></P>
   <p>投稿日時<%= @postimage.created_at.strftime("%Y/%m/%d") %></p>
 
-  <%= if @postimage.user == current_user %>
+  <% if @postimage.user == current_user %>
   <!--ここで引数に指定している(@postimage)はshowアクションで定義した@postimage -->
     <%= link_to "削除", postimage_path(@postimage), method: :delete %>
+  <% end %>
+
+
+　<!--19章 いいね機能-->
+  <% if @postimage.favorited_by?(current_user) %>
+    <p>
+      <%= link_to postimage_favorites_path(@postimage), method: :delete do %>
+        ♥<%= @postimage.favorites.count %> いいね
+      <% end %>
+    </p>
+    <% else %>
+    <!--リンクにする名前指定に何らかのメソッドを加えるときはdoをつけて入れ子構造にする-->
+    <p>
+      <%= link_to postimage_favorites_path(@postimage), method: :post do %>
+        ♡<%= @postimage.favorites.count %> いいね
+      <% end %>
+    </p>
+  <% end %>
+</div>
+
+
+<!--上記投稿画像に対して書き込まれたコメント情報-->
+<div>
+  <!--38・39行目.post_commentsも親子/アソ関係で付随できるテーブル、count数える・eachで取り出すから複数形-->
+  <p>コメント件数<%= @postimage.post_comments.count %></p>
+  <% @postimage.post_comments.each do |post_comment| %>
+    <p><%= image_tag post_comment.user.get_profile_image(100, 100) %></p>
+    <%= post_comment.user.name %>
+    <%= post_comment.created_at.strftime('%Y/%m/%d') %><%= post_comment.comment %>
+    <% if post_comment.user == current_user %>
+    <!--引数は(対応しているURLに含む1つ目の:id, 2つ目の:id)-->
+      <%=  link_to "削除", postimage_post_comment_path(post_comment.postimage, post_comment), method: :delete %>
+    <% end %>
+  <% end %>
+</div>
+
+
+<!--上記投稿画像に対してのコメントフォーム-->
+<div>
+  <%= form_with model: [@postimage, @post_comment] do |f| %>
+  <%= f.text_area :comment, rows:"5", spaceholder: "コメントをここに" %>
+  <%= f.submit "送信する" %>
   <% end %>
 </div>
